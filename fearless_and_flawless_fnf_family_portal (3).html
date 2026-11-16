@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fearless and Flawless — FNF Family Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for celebratory moments -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        warm: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        coral: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.74);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+        .dark .glass-header {
+            background: rgba(2, 6, 23, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+        /* Ambient Mesh Background */
+        .mesh-bg {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.07) 0px, transparent 50%),
+                radial-gradient(at 85% 95%, rgba(245, 158, 11, 0.06) 0px, transparent 50%);
+        }
+        .dark .mesh-bg {
+            background-color: #020617;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.16) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.12) 0px, transparent 50%),
+                radial-gradient(at 85% 95%, rgba(245, 158, 11, 0.09) 0px, transparent 50%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 9999px;
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-float {
+            animation: floatSlow 3s ease-in-out infinite;
+        }
+        @keyframes highlightPulse {
+            0% { background-color: rgba(99, 102, 241, 0.24); }
+            100% { background-color: transparent; }
+        }
+        .row-highlight {
+            animation: highlightPulse 2.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="mesh-bg text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Top Navigation & Role Switcher Header -->
+    <header class="sticky top-0 z-30 glass-header border-b border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between h-auto py-3 md:h-16 gap-3">
+                <!-- Brand Identity -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 via-indigo-600 to-coral-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25">
+                        <i data-lucide="crown" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-display font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">Fearless and Flawless</span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-brand-50 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-700/60">
+                                FNF Family Portal
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Community Hub, Self-Onboarding & Automated Birthday Celebrations</p>
+                    </div>
+                </div>
+
+                <!-- Right Controls: Self-Service CTA + Theme Toggle + Role Switcher -->
+                <div class="flex items-center gap-2 sm:gap-2.5">
+                    <!-- Prominent Self-Service My Profile CTA (Member View) -->
+                    <button id="btn-header-my-profile" onclick="switchTab('my-profile')" class="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white text-xs font-semibold shadow-sm shadow-brand-500/20 transition-all">
+                        <i data-lucide="user-circle" class="w-3.5 h-3.5"></i>
+                        <span class="hidden sm:inline">My Profile / Join</span>
+                        <span class="sm:hidden">My Profile</span>
+                    </button>
+
+                    <!-- Light / Dark Mode Switch -->
+                    <button id="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Light / Dark Theme" class="p-2 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 hover:bg-slate-200/70 dark:hover:bg-slate-700 transition-colors">
+                        <i id="theme-icon-sun" data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+                        <i id="theme-icon-moon" data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-700"></i>
+                    </button>
+
+                    <!-- Role Switcher Control (Syncs with ?admin=true) -->
+                    <div class="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200/80 dark:border-slate-700/80">
+                        <button id="btn-role-member" onclick="switchRole('member')" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs">
+                            <i data-lucide="user" class="w-3.5 h-3.5 text-brand-600 dark:text-brand-400"></i>
+                            <span class="hidden md:inline">Member View</span>
+                            <span class="md:hidden">Member</span>
+                        </button>
+                        <button id="btn-role-admin" onclick="switchRole('admin')" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-500"></i>
+                            <span class="hidden md:inline">CEO / Admin</span>
+                            <span class="md:hidden">Admin</span>
+                        </button>
+                    </div>
+
+                    <!-- Active User Pill -->
+                    <div class="hidden xl:flex items-center gap-2.5 pl-3 border-l border-slate-200 dark:border-slate-800">
+                        <div id="active-user-avatar" class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center border border-brand-200 dark:border-brand-700">
+                            AO
+                        </div>
+                        <div class="text-left">
+                            <p id="active-user-name" class="text-xs font-semibold text-slate-800 dark:text-slate-100 leading-tight">Amara Okafor</p>
+                            <span id="active-user-badge" class="inline-block text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">FNF Member</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Sub-Navigation Tabs (Strictly Scoped per Role) -->
+        <div class="bg-slate-50/70 dark:bg-slate-900/50 border-t border-slate-200/60 dark:border-slate-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 sm:gap-4 overflow-x-auto no-scrollbar">
+                <!-- MEMBER VIEW TABS -->
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab member-tab active flex items-center gap-2 px-3 py-3 text-sm font-semibold border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 dark:border-brand-400 whitespace-nowrap transition-colors">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Community Hub</span>
+                </button>
+                <button onclick="switchTab('birthdays')" id="tab-birthdays" class="nav-tab member-tab flex items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-colors">
+                    <i data-lucide="cake" class="w-4 h-4"></i>
+                    <span>Upcoming Birthdays</span>
+                    <span id="nav-bday-badge" class="px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-coral-100 dark:bg-coral-900/50 text-coral-600 dark:text-coral-300">1 Today</span>
+                </button>
+                <button onclick="switchTab('events')" id="tab-events" class="nav-tab member-tab flex items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-colors">
+                    <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                    <span>Events & Weekly Tasks</span>
+                </button>
+                <button onclick="switchTab('my-profile')" id="tab-my-profile" class="nav-tab member-tab flex items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-colors">
+                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                    <span>My Profile</span>
+                </button>
+                <button onclick="switchTab('directory')" id="tab-directory" class="nav-tab member-tab flex items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-colors">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Member Directory</span>
+                    <span id="nav-member-count" class="px-1.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300">8</span>
+                </button>
+
+                <!-- CEO / ADMIN EXCLUSIVE TABS -->
+                <button onclick="switchTab('admin-governance')" id="tab-admin-governance" class="nav-tab admin-tab hidden items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-colors">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-amber-500"></i>
+                    <span>Admin Governance</span>
+                </button>
+                <button onclick="switchTab('automation')" id="tab-automation" class="nav-tab admin-tab hidden items-center gap-2 px-3 py-3 text-sm font-medium border-b-2 border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap transition-colors">
+                    <i data-lucide="mail-check" class="w-4 h-4 text-brand-500"></i>
+                    <span>Birthday Mail Engine</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Role Context Banner -->
+    <div id="role-banner" class="bg-brand-50/90 dark:bg-brand-950/60 border-b border-brand-100 dark:border-brand-900/60 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2 text-brand-950 dark:text-brand-200">
+                <i id="role-banner-icon" data-lucide="sparkles" class="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0"></i>
+                <span id="role-banner-text">
+                    Welcome to the <strong>FNF Family Member Hub</strong>! Explore upcoming birthdays, weekly task handlers, events, or <button onclick="switchTab('my-profile')" class="underline font-bold text-brand-700 dark:text-brand-300 hover:text-brand-900">update your profile</button>.
+                </span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="btn-reset-demo" onclick="resetDemoData()" class="hidden items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-200/70 dark:bg-amber-900/50 text-amber-900 dark:text-amber-200 text-xs font-semibold hover:bg-amber-300/70 transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                    <span>Reset Demo Data</span>
+                </button>
+                <button id="role-banner-cta" onclick="switchRole('admin')" class="text-xs font-semibold text-brand-700 dark:text-brand-300 hover:underline underline-offset-2">
+                    CEO / Admin Portal (?admin=true) &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- ==========================================
+             VIEW 1: COMMUNITY HUB (MEMBER VIEW DEFAULT)
+             Contains: Welcome Address, New Member Spotlight, Upcoming Birthdays,
+             Upcoming Events, Task Handlers for the Week, Leadership & My Profile Quick Card
+             ========================================== -->
+        <section id="view-dashboard" class="space-y-8">
+            
+            <!-- Top Member-Centric Pulse Strip (No Admin Mail/Controls in Member View) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">FNF Family Members</p>
+                        <p id="stat-total-members" class="text-2xl font-display font-bold text-slate-900 dark:text-white mt-1">8</p>
+                        <button onclick="switchTab('my-profile')" class="text-xs text-brand-600 dark:text-brand-400 font-semibold mt-1 flex items-center gap-1 hover:underline">
+                            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Add / Edit My Info &rarr;
+                        </button>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-coral-50 to-amber-50/80 dark:from-coral-950/60 dark:to-amber-950/40 backdrop-blur-md rounded-2xl p-5 border border-coral-200/80 dark:border-coral-800/60 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-coral-600 dark:text-coral-400 uppercase tracking-wider">Birthday Spotlight</p>
+                        <p id="stat-today-bday" class="text-lg font-display font-bold text-slate-900 dark:text-white mt-1 truncate max-w-[170px]">Chidinma Eze</p>
+                        <button id="btn-stat-wish" onclick="openWishModal('Chidinma Eze')" class="text-xs font-semibold text-coral-600 dark:text-coral-400 hover:underline mt-1 inline-flex items-center gap-1">
+                            Send Birthday Wish &rarr;
+                        </button>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-white dark:bg-slate-900 text-coral-500 shadow-xs flex items-center justify-center animate-float">
+                        <i data-lucide="party-popper" class="w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Upcoming Events</p>
+                        <p id="stat-upcoming-events" class="text-2xl font-display font-bold text-slate-900 dark:text-white mt-1">3</p>
+                        <button onclick="switchTab('events')" class="text-xs text-brand-600 dark:text-brand-400 font-semibold mt-1 hover:underline">
+                            RSVP to Hangouts &rarr;
+                        </button>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                        <i data-lucide="calendar-days" class="w-6 h-6"></i>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Weekly Duty Roster</p>
+                        <p id="stat-weekly-tasks" class="text-2xl font-display font-bold text-emerald-600 dark:text-emerald-400 mt-1">4 Active</p>
+                        <button onclick="switchTab('events')" class="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-1 hover:underline">
+                            See Week's Handlers &rarr;
+                        </button>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Two-Column Member Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- LEFT COLUMN (7 cols): Welcome Address, New Member Spotlight, & Task Handlers for the Week -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- 1. Official Welcome Address (Read-only for Members, Editable only in CEO/Admin Mode) -->
+                    <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+                        <div class="bg-gradient-to-r from-slate-900 via-brand-900 to-indigo-900 px-6 py-5 text-white flex items-start justify-between gap-4">
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-white text-xs font-medium mb-2">
+                                    <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-300"></i>
+                                    <span>Official Fearless and Flawless Welcome Address</span>
+                                </div>
+                                <h2 id="welcome-guide-title" class="font-display font-bold text-xl">Welcome to Fearless and Flawless!</h2>
+                            </div>
+                            <!-- Only visible in CEO / Admin Mode -->
+                            <button id="btn-edit-welcome-guide" onclick="toggleInlineWelcomeEdit()" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-semibold transition-colors shrink-0">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                <span>Edit Address</span>
+                            </button>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div id="welcome-charter-read">
+                                <p id="welcome-guide-body" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                    Welcome to the FNF Family! Fearless and Flawless is built on bold ambition, unwavering loyalty, and genuine celebration of one another. Whether you are a brand-new member or an existing FNF member updating your details, visit My Profile to keep your birthday and contact info up to date!
+                                </p>
+                            </div>
+                            <!-- Inline Edit View (CEO/Admin Only) -->
+                            <div id="welcome-charter-edit" class="hidden space-y-3">
+                                <input type="text" id="inline-welcome-title" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                                <textarea id="inline-welcome-body" rows="3" class="w-full p-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:border-brand-500"></textarea>
+                                <div class="flex justify-end gap-2">
+                                    <button onclick="cancelInlineWelcomeEdit()" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                                    <button onclick="saveInlineWelcomeEdit()" class="px-4 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-xs">Save Address</button>
+                                </div>
+                            </div>
+
+                            <!-- Quick Member Onboarding Callout -->
+                            <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-50/90 to-indigo-50/90 dark:from-brand-950/60 dark:to-indigo-950/60 border border-brand-200/70 dark:border-brand-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <p class="text-xs font-bold text-brand-900 dark:text-brand-200">New or Existing FNF Member?</p>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Claim your profile or add your birthday & contact details directly.</p>
+                                </div>
+                                <button onclick="switchTab('my-profile')" class="px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-xs transition-colors shrink-0">
+                                    Open My Profile &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. New Member Spotlight -->
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                            <div>
+                                <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span>New Member Spotlight</span>
+                                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">Fresh Faces</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Wave welcome to our newest Fearless and Flawless members!</p>
+                            </div>
+                            <button onclick="switchTab('my-profile'); selectProfileActionMode('new')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors">
+                                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                                <span>Join as New Member</span>
+                            </button>
+                        </div>
+
+                        <div id="new-members-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- 3. Task Handlers for the Week (Member Dashboard Card) -->
+                    <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                                    <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Task Handlers for the Week</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Current Week Duty Roster (Nov 16 – Nov 22)</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('events')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                                Full Roster &rarr;
+                            </button>
+                        </div>
+                        <div id="dashboard-task-handlers" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN (5 cols): Upcoming Birthdays, Upcoming Events, & FNF Leadership -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <!-- 4. Upcoming Birthdays Card (Pure Member View — No Admin Email Controls here) -->
+                    <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-coral-100 dark:bg-coral-900/40 text-coral-600 dark:text-coral-400 flex items-center justify-center">
+                                    <i data-lucide="cake" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Upcoming Birthdays</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Celebrate our FNF Family stars</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('birthdays')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                                View All &rarr;
+                            </button>
+                        </div>
+
+                        <div id="dashboard-birthday-list" class="space-y-3">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- 5. Upcoming Events Card (With Interactive RSVP Toggle) -->
+                    <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                                    <i data-lucide="calendar-heart" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Upcoming FNF Events</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Tap RSVP to reserve your spot</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('events')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+                                All Events &rarr;
+                            </button>
+                        </div>
+                        <div id="dashboard-events-list" class="space-y-3">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- 6. FNF Leadership Card (CEO & Admins Showcase) -->
+                    <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-display font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                                <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
+                                <span>FNF Leadership</span>
+                            </h3>
+                            <span class="text-xs text-slate-400">CEO & Admins</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                            Reach out to our leadership team anytime for community support, ideas, or event hosting.
+                        </p>
+                        <div id="leadership-list" class="space-y-2.5">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. FULL FNF MEMBER DIRECTORY ON MAIN MEMBER VIEW -->
+            <div id="dashboard-member-directory-section" class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 space-y-5">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-display font-bold text-xl text-slate-900 dark:text-white">Fearless and Flawless Member Directory</h3>
+                            <span id="dash-dir-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">8 Members</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                            Browse all FNF Family members, filter by role, send birthday wishes, or update your own listing.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button onclick="switchTab('my-profile'); selectProfileActionMode('new')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors">
+                            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                            <span>Join Directory</span>
+                        </button>
+                        <button onclick="switchTab('my-profile'); selectProfileActionMode('claim')" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-xs transition-colors">
+                            <i data-lucide="user-edit" class="w-3.5 h-3.5"></i>
+                            <span>Update My Info</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Role Filter Pills -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
+                    <div class="relative flex-1 max-w-md">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="dash-dir-search" oninput="renderDashboardMemberDirectory()" placeholder="Search members by name, city, or bio..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5" id="dash-dir-filter-pills">
+                        <button type="button" onclick="setDashDirFilter('ALL')" data-filter="ALL" class="dash-filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-xs transition-colors">All</button>
+                        <button type="button" onclick="setDashDirFilter('CEO')" data-filter="CEO" class="dash-filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">CEO</button>
+                        <button type="button" onclick="setDashDirFilter('Admin')" data-filter="Admin" class="dash-filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Admin</button>
+                        <button type="button" onclick="setDashDirFilter('Member')" data-filter="Member" class="dash-filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Member</button>
+                    </div>
+                </div>
+
+                <!-- Member Cards Grid -->
+                <div id="dashboard-member-directory-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <!-- Dynamically populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 2: UPCOMING BIRTHDAYS (MEMBER CELEBRATION BOARD)
+             ========================================== -->
+        <section id="view-birthdays" class="hidden space-y-6">
+            <div class="glass-panel flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                <div>
+                    <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">FNF Upcoming Birthdays & Wishes</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        Post celebratory wishes for upcoming celebrants or make sure your own birthday is listed in My Profile.
+                    </p>
+                </div>
+                <button onclick="switchTab('my-profile')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors shrink-0">
+                    <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                    <span>Add / Update My Birthday</span>
+                </button>
+            </div>
+
+            <!-- Birthday Cards Grid -->
+            <div id="full-birthdays-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 3: UPCOMING EVENTS & WEEKLY TASK HANDLERS
+             ========================================== -->
+        <section id="view-events" class="hidden space-y-8">
+            <!-- Upcoming Events Section -->
+            <div class="space-y-4">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Upcoming Fearless and Flawless Events</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">RSVP to upcoming hangouts, game nights, and community outreach initiatives.</p>
+                    </div>
+                    <button id="btn-events-admin-add" onclick="openEventModal()" class="hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs sm:text-sm font-bold shadow-xs transition-colors shrink-0">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Add New Event</span>
+                    </button>
+                </div>
+
+                <div id="full-events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Weekly Task Handlers Section -->
+            <div class="space-y-4">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Task Handlers for the Week</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Meet the FNF members leading community roles and weekly activities this week.</p>
+                    </div>
+                    <button id="btn-tasks-admin-manage" onclick="switchTab('admin-governance')" class="hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors shrink-0">
+                        <i data-lucide="sliders" class="w-4 h-4"></i>
+                        <span>Reassign Weekly Handlers</span>
+                    </button>
+                </div>
+
+                <div id="full-task-handlers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 4: MY PROFILE (DEDICATED MEMBER SELF-SERVICE TAB)
+             ========================================== -->
+        <section id="view-my-profile" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+                <div class="px-6 py-5 bg-gradient-to-r from-brand-600 via-indigo-600 to-slate-900 text-white">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
+                            <i data-lucide="user-check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-display font-bold text-xl">My FNF Member Profile</h2>
+                            <p class="text-xs text-white/80 mt-0.5">Register as a new or existing FNF member, or select your profile below to update your own details.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Mode Switcher: Claim/Update Existing vs Register New/Old Member -->
+                <div class="px-6 pt-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex flex-wrap gap-3">
+                    <button type="button" id="mp-tab-claim" onclick="selectProfileActionMode('claim')" class="pb-3 px-2 text-xs sm:text-sm font-bold border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 dark:border-brand-400 transition-colors">
+                        1. Claim & Edit My Existing Profile
+                    </button>
+                    <button type="button" id="mp-tab-new" onclick="selectProfileActionMode('new')" class="pb-3 px-2 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
+                        2. Register New / Unlisted Member
+                    </button>
+                </div>
+
+                <form id="form-my-profile" onsubmit="submitMyProfileForm(event)" class="p-6 space-y-5">
+                    <input type="hidden" id="mp-mode" value="claim">
+                    <input type="hidden" id="mp-selected-id" value="8">
+
+                    <!-- Profile Picker (Shown in Claim/Edit Mode) -->
+                    <div id="mp-claim-box" class="p-4 rounded-xl bg-brand-50/70 dark:bg-brand-950/50 border border-brand-200/70 dark:border-brand-800/60 space-y-2">
+                        <label class="block text-xs font-bold text-brand-900 dark:text-brand-200">Select Your Name from the FNF Directory:</label>
+                        <select id="mp-member-picker" onchange="loadMemberIntoMyProfile(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:border-brand-500">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- Membership Status Radio Cards -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Directory Status</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <label id="mp-card-new" onclick="setMyProfileNewFlag(true)" class="cursor-pointer p-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 transition-all flex items-start gap-2.5">
+                                <input type="radio" name="mp-status-type" id="mp-radio-new" value="new" class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                                        <span>New Member</span>
+                                        <span class="px-1.5 py-0.2 text-[10px] rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">Spotlight</span>
+                                    </p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Features you in the New Member Welcome Spotlight.</p>
+                                </div>
+                            </label>
+
+                            <label id="mp-card-existing" onclick="setMyProfileNewFlag(false)" class="cursor-pointer p-3.5 rounded-xl border-2 border-brand-600 bg-brand-50/60 dark:bg-brand-950/50 transition-all flex items-start gap-2.5">
+                                <input type="radio" name="mp-status-type" id="mp-radio-existing" value="existing" checked class="mt-0.5 text-brand-600 focus:ring-brand-500">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white">Existing / Old FNF Member</p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Lists you in the FNF Family Directory & Birthday Radar.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Personal Details Fields -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name <span class="text-coral-500">*</span></label>
+                            <input type="text" id="mp-name" required placeholder="e.g., Amara Okafor" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address <span class="text-coral-500">*</span></label>
+                            <input type="email" id="mp-email" required placeholder="amara@fnffamily.org" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Birthday (Month & Day) <span class="text-coral-500">*</span></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <select id="mp-bday-month" required class="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                                    <option value="Jan">Jan</option>
+                                    <option value="Feb">Feb</option>
+                                    <option value="Mar">Mar</option>
+                                    <option value="Apr">Apr</option>
+                                    <option value="May">May</option>
+                                    <option value="Jun">Jun</option>
+                                    <option value="Jul">Jul</option>
+                                    <option value="Aug">Aug</option>
+                                    <option value="Sep">Sep</option>
+                                    <option value="Oct">Oct</option>
+                                    <option value="Nov">Nov</option>
+                                    <option value="Dec">Dec</option>
+                                </select>
+                                <select id="mp-bday-day" required class="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                                    <!-- Populated 1-31 via JS -->
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">WhatsApp / Phone Number</label>
+                            <input type="text" id="mp-phone" placeholder="e.g., +234 818 800 8008" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">City / Location</label>
+                            <input type="text" id="mp-location" placeholder="e.g., Lagos" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Title & Short Bio</label>
+                            <input type="text" id="mp-bio" required placeholder="e.g., Digital Health Lead • Salsa dancer & botanical collector" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/70">
+                        <label class="flex items-center gap-2.5 text-xs font-medium text-slate-700 dark:text-slate-200 cursor-pointer">
+                            <input type="checkbox" id="mp-optin" checked class="w-4 h-4 text-brand-600 rounded border-slate-300">
+                            <span>Receive automated FNF birthday reminder emails</span>
+                        </label>
+                    </div>
+
+                    <div class="pt-2 flex justify-end">
+                        <button type="submit" id="mp-submit-btn" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs flex items-center gap-2 transition-colors">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                            <span>Save My Profile to FNF Directory</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 5: CLEAN MEMBER DIRECTORY (READ-ONLY ROSTER IN MEMBER VIEW)
+             ========================================== -->
+        <section id="view-directory" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Fearless and Flawless Member Directory</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                            Connect with fellow FNF Family members, check birthdays, and send birthday wishes.
+                        </p>
+                    </div>
+                    <button onclick="switchTab('my-profile')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors shrink-0">
+                        <i data-lucide="user-edit" class="w-4 h-4"></i>
+                        <span>Update My Own Info</span>
+                    </button>
+                    <!-- Search and Filter Controls -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="dir-search" oninput="renderMemberDirectoryCards()" placeholder="Search members by name, location, or bio..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
+                    </div>
+                    <select id="dir-role-filter" onchange="renderMemberDirectoryCards()" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
+                        <option value="ALL">All FNF Members</option>
+                        <option value="CEO">CEO</option>
+                        <option value="Admin">Admins</option>
+                        <option value="Member">Members</option>
+                        <option value="NEW">New Members</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Clean Member Roster Cards (Zero Admin Edit/Delete/Role Controls) -->
+            <div id="member-directory-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 6: CEO / ADMIN GOVERNANCE (EXCLUSIVE TO ?admin=true)
+             Contains: Full Directory Governance (Promote/Demote, Edit, Delete, Add),
+             Upcoming Events Manager, Weekly Task Handlers Manager, & Welcome Editor
+             ========================================== -->
+        <section id="view-admin-governance" class="hidden space-y-8">
+            
+            <!-- Admin Governance Header -->
+            <div class="glass-panel p-6 rounded-2xl border border-amber-300/70 dark:border-amber-800/70 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-bold mb-1.5">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>CEO & Admin Control Center</span>
+                    </div>
+                    <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Full Member Directory, Events & Weekly Roster Governance</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        Manage member roles (CEO / Admin / Member), assign weekly task handlers, and publish FNF community events.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <button onclick="openMemberModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-colors">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i>
+                        <span>+ Add Member</span>
+                    </button>
+                    <button onclick="openEventModal()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs sm:text-sm font-bold shadow-xs transition-colors">
+                        <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                        <span>+ Add Event</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Sub-Grid: Weekly Task Handlers Manager + Events Manager -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Weekly Task Handlers Assignment Manager (6 cols) -->
+                <div class="lg:col-span-6 glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Weekly Task Handlers Roster</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Add new weekly tasks, assign handlers, or delete old tasks</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="confirmClearCompletedTasks()" class="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-coral-50 dark:hover:bg-coral-950/50 text-slate-600 dark:text-slate-300 hover:text-coral-600 text-[11px] font-semibold transition-colors">
+                                Clear Completed
+                            </button>
+                            <button onclick="openTaskModal()" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-xs transition-colors">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>Add New Weekly Task</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="admin-task-handlers-list" class="space-y-3">
+                        <!-- Dynamically populated with inline member/status selectors & edit/delete controls -->
+                    </div>
+                </div>
+
+                <!-- Upcoming Events Manager (6 cols) -->
+                <div class="lg:col-span-6 glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Upcoming Events Manager</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Create, edit, or remove FNF Family events</p>
+                        </div>
+                        <button onclick="openEventModal()" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">+ New Event</button>
+                    </div>
+                    <div id="admin-events-list" class="space-y-3">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Administrative Member Table (Role Dropdowns, Spotlight Toggle, Edit, Delete) -->
+            <div class="glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+                <div class="p-5 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Member Roles & Directory Governance Table</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Promote/demote roles, toggle New Member spotlight, or remove entries</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="admin-dir-search" oninput="renderAdminDirectoryTable()" placeholder="Filter members..." class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                        <select id="admin-dir-role-filter" onchange="renderAdminDirectoryTable()" class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-700 dark:text-slate-200 focus:outline-none focus:border-brand-500">
+                            <option value="ALL">All Roles</option>
+                            <option value="CEO">CEO</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Member">Member</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/80 dark:bg-slate-900/70 border-b border-slate-200/80 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                <th class="py-3.5 px-6">Member & Contact</th>
+                                <th class="py-3.5 px-4">Assign Role</th>
+                                <th class="py-3.5 px-4">Birthday</th>
+                                <th class="py-3.5 px-4">Mail Opt-In</th>
+                                <th class="py-3.5 px-6 text-right">Governance Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-directory-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 7: AUTOMATED BIRTHDAY MAIL ENGINE (EXCLUSIVE TO ?admin=true)
+             ========================================== -->
+        <section id="view-automation" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left: Reminder Schedule Rules -->
+                <div class="lg:col-span-5 glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 space-y-5 h-fit">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white">Birthday Mail Engine Rules</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Automated notifications dispatched to CEO, Admins & opt-in members</p>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">
+                            <i data-lucide="unlock" class="w-3 h-3"></i> Active
+                        </span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="flex items-start justify-between p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-900/50 cursor-pointer">
+                            <div class="pr-3">
+                                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">3-Day Early Group Reminder</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Sends reminder mail to CEO, Admins & opt-in members 3 days before a birthday.</p>
+                            </div>
+                            <input type="checkbox" id="rule-3day" checked onchange="toggleMailRule('3-Day Early Group Reminder', this.checked)" class="rule-checkbox mt-1 w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                        </label>
+
+                        <label class="flex items-start justify-between p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-900/50 cursor-pointer">
+                            <div class="pr-3">
+                                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">Birthday Morning Celebration Mail</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Dispatches celebratory FNF Family email at 8:00 AM on the celebrant's birthday.</p>
+                            </div>
+                            <input type="checkbox" id="rule-dayof" checked onchange="toggleMailRule('Birthday Morning Celebration', this.checked)" class="rule-checkbox mt-1 w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                        </label>
+
+                        <label class="flex items-start justify-between p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-900/50 cursor-pointer">
+                            <div class="pr-3">
+                                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">New Member Welcome Digest</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Automatically emails the FNF Family when a new member registers on the portal.</p>
+                            </div>
+                            <input type="checkbox" id="rule-welcome" checked onchange="toggleMailRule('New Member Welcome Digest', this.checked)" class="rule-checkbox mt-1 w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500">
+                        </label>
+                    </div>
+
+                    <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
+                        <button onclick="openEmailPreviewModal()" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                            <span>Preview HTML Email</span>
+                        </button>
+                        <button onclick="triggerManualReminderEmail()" class="flex-1 py-2.5 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            <span>Send Reminder Now</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Live Automated Email Dispatch Log Table -->
+                <div class="lg:col-span-7 glass-panel rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white">Email Dispatch Log</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Audit trail of automated & manual birthday reminder dispatches</p>
+                        </div>
+                        <button onclick="triggerManualReminderEmail()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold transition-colors">
+                            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                            <span>Send Reminder Mail Now</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    <th class="py-2.5 pr-3">Timestamp</th>
+                                    <th class="py-2.5 px-3">Celebrant / Trigger</th>
+                                    <th class="py-2.5 px-3">Recipient Group</th>
+                                    <th class="py-2.5 pl-3 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="email-logs-container" class="divide-y divide-slate-100 dark:divide-slate-800/80 text-xs">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         MODALS
+         ========================================== -->
+
+    <!-- 1. Preview & Test Birthday Reminder Email Modal (CEO / Admin) -->
+    <div id="modal-email-preview" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-xs p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="mail" class="w-5 h-5 text-brand-600 dark:text-brand-400"></i>
+                    <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">FNF Birthday Reminder Email Preview</h3>
+                </div>
+                <button onclick="closeModal('modal-email-preview')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <div class="bg-slate-50 dark:bg-slate-800/80 rounded-xl p-3.5 border border-slate-200/80 dark:border-slate-700 text-xs space-y-1.5">
+                    <div class="flex"><span class="w-20 text-slate-400 font-medium">From:</span> <span class="text-slate-800 dark:text-slate-100 font-semibold">Fearless and Flawless &lt;celebrations@fnffamily.org&gt;</span></div>
+                    <div class="flex"><span class="w-20 text-slate-400 font-medium">To:</span> <span class="text-slate-700 dark:text-slate-300">CEO, Admins & All Opt-In FNF Members</span></div>
+                    <div class="flex"><span class="w-20 text-slate-400 font-medium">Subject:</span> <span class="text-brand-700 dark:text-brand-400 font-bold">🎂 FNF Birthday Alert: Upcoming Family Celebrations!</span></div>
+                </div>
+
+                <!-- Formatted HTML Email Body Preview -->
+                <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-xs">
+                    <div class="bg-gradient-to-r from-slate-900 via-brand-700 to-coral-600 p-6 text-center text-white">
+                        <p class="text-xs uppercase tracking-widest font-semibold opacity-90">Fearless and Flawless • FNF Family</p>
+                        <h4 class="font-display font-bold text-2xl mt-1">It's Celebration Time! 🎉</h4>
+                    </div>
+                    <div class="p-6 bg-white text-slate-600 space-y-4 text-sm">
+                        <p>Hello <strong>Fearless and Flawless Family</strong>,</p>
+                        <p>This is your automated celebration reminder so we always show up boldly for one another!</p>
+                        
+                        <div id="email-preview-celebrants-box" class="p-4 rounded-xl bg-amber-50/80 border border-amber-200/70">
+                            <!-- Dynamically populated with current upcoming celebrants -->
+                        </div>
+
+                        <div class="pt-2 text-center">
+                            <span class="inline-block px-5 py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-xs">
+                                Open FNF Family Portal & Send Wishes
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 px-6 py-3 text-center text-[11px] text-slate-400 border-t border-slate-100">
+                        Sent automatically by Fearless and Flawless Portal • Managed by CEO & Admins
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+                <button onclick="closeModal('modal-email-preview')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-800">
+                    Close
+                </button>
+                <button onclick="closeModal('modal-email-preview'); triggerManualReminderEmail();" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Send Reminder Mail Now</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Admin Add / Edit Member Modal (CEO / Admin Only) -->
+    <div id="modal-member" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-xs p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="modal-member-title" class="font-display font-bold text-base text-slate-900 dark:text-white">Admin: Add / Edit FNF Member</h3>
+                <button onclick="closeModal('modal-member')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="form-member" onsubmit="saveMember(event)" class="p-6 space-y-4">
+                <input type="hidden" id="member-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                    <input type="text" id="member-name" required placeholder="e.g., Zainab Bello" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">FNF Role</label>
+                        <select id="member-role" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                            <option value="Member">Member</option>
+                            <option value="Admin">Admin</option>
+                            <option value="CEO">CEO</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Birthday (Month & Day)</label>
+                        <input type="text" id="member-birthday" required placeholder="e.g., Nov 25" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+                        <input type="email" id="member-email" required placeholder="zainab@fnffamily.org" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone / WhatsApp</label>
+                        <input type="text" id="member-phone" placeholder="+234 800 000 0000" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Location</label>
+                        <input type="text" id="member-location" placeholder="Lagos" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Short Intro / Role</label>
+                        <input type="text" id="member-bio" required placeholder="e.g., Creative Director • Loves rooftop brunch" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <label class="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="member-is-new" checked class="w-4 h-4 text-brand-600 rounded border-slate-300">
+                        <span>New Member Spotlight</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="member-optin" checked class="w-4 h-4 text-brand-600 rounded border-slate-300">
+                        <span>Email Reminders</span>
+                    </label>
+                </div>
+                <div class="pt-3 flex justify-end gap-2.5 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeModal('modal-member')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs">Save Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Admin Add / Edit Event Modal (CEO / Admin Only) -->
+    <div id="modal-event" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-xs p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="modal-event-title" class="font-display font-bold text-base text-slate-900 dark:text-white">Admin: Add / Edit FNF Event</h3>
+                <button onclick="closeModal('modal-event')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="form-event" onsubmit="saveEvent(event)" class="p-6 space-y-4">
+                <input type="hidden" id="event-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Event Title</label>
+                    <input type="text" id="event-title" required placeholder="e.g., Monthly FNF Rooftop Hangout" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Date & Time</label>
+                        <input type="text" id="event-date" required placeholder="e.g., Sat, Nov 28 • 4:00 PM" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Category Tag</label>
+                        <select id="event-tag" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                            <option value="Hangout">Hangout</option>
+                            <option value="Games & Trivia">Games & Trivia</option>
+                            <option value="Outreach">Outreach</option>
+                            <option value="Celebration">Celebration</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Location / Venue</label>
+                    <input type="text" id="event-venue" required placeholder="e.g., Victoria Island, Lagos / Google Meet" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Event Description</label>
+                    <textarea id="event-desc" rows="2" required placeholder="Short summary of what members can expect..." class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+                <div class="pt-3 flex justify-end gap-2.5 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeModal('modal-event')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs">Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3B. Admin Add / Edit Weekly Task Modal (CEO / Admin Only) -->
+    <div id="modal-task" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-xs p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <h3 id="modal-task-title" class="font-display font-bold text-base text-slate-900 dark:text-white">Admin: Add Weekly Task</h3>
+                <button onclick="closeModal('modal-task')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="form-task" onsubmit="saveWeeklyTask(event)" class="p-6 space-y-4">
+                <input type="hidden" id="task-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Task Title / Role <span class="text-coral-500">*</span></label>
+                    <input type="text" id="task-role-title" required placeholder="e.g., Event Logistics Coordinator" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Task Responsibility Description <span class="text-coral-500">*</span></label>
+                    <textarea id="task-description" rows="2" required placeholder="e.g., Coordinate venue confirmations and attendance check-ins" class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Assigned Handler <span class="text-coral-500">*</span></label>
+                        <select id="task-handler-select" required class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                            <!-- Populated dynamically from FNF members -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Status</label>
+                        <select id="task-status-select" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                            <option value="Active">Active</option>
+                            <option value="On Duty">On Duty</option>
+                            <option value="Preparing">Preparing</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pt-3 flex justify-end gap-2.5 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeModal('modal-task')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs">Save Weekly Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Send Birthday Wish Modal -->
+    <div id="modal-wish" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-xs p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 bg-gradient-to-r from-coral-500 to-amber-500 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="party-popper" class="w-5 h-5"></i>
+                    <h3 class="font-display font-bold text-base">Send FNF Birthday Wishes</h3>
+                </div>
+                <button onclick="closeModal('modal-wish')" class="p-1 rounded-lg text-white/80 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form onsubmit="submitBirthdayWish(event)" class="p-6 space-y-4">
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                    Write a celebratory note for <strong id="wish-recipient-name" class="text-slate-900 dark:text-white">Member</strong>. It posts straight to their FNF birthday card!
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                    <button type="button" onclick="setQuickWish('Happy Birthday! Wishing you a truly Fearless and Flawless year ahead! 🎉')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200">🎉 Fearless & Flawless Year</button>
+                    <button type="button" onclick="setQuickWish('Many happy returns! So blessed to have you in the FNF Family! 🎂')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200">🎂 FNF Family Love</button>
+                </div>
+                <textarea id="wish-message-input" rows="3" required placeholder="Write your birthday wish here..." class="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-coral-500"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('modal-wish')" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold shadow-xs">Post Wish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Custom Confirmation Modal -->
+    <div id="modal-confirm" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/65 backdrop-blur-xs p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden p-6 space-y-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-coral-100 dark:bg-coral-900/40 text-coral-600 dark:text-coral-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 id="confirm-title" class="font-display font-bold text-base text-slate-900 dark:text-white">Confirm Action</h3>
+                    <p id="confirm-message" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Are you sure you want to proceed?</p>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModal('modal-confirm')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+                <button id="confirm-proceed-btn" class="px-4 py-2 rounded-xl bg-coral-600 hover:bg-coral-700 text-white text-xs font-semibold shadow-xs">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- ==========================================
+         APPLICATION LOGIC & LOCALSTORAGE PERSISTENCE
+         ========================================== -->
+    <script>
+        const STORAGE_KEY = 'fnf_family_portal_state_v3';
+        const THEME_KEY = 'fnf_family_portal_theme';
+
+        // Dynamic Current Date Reference (Monday, Nov 16, 2026)
+        const TODAY_REF = new Date(2026, 10, 16);
+
+        const DEFAULT_CHARTER = {
+            title: "Welcome to Fearless and Flawless!",
+            body: "Welcome to the FNF Family! Fearless and Flawless is built on bold ambition, unwavering loyalty, and genuine celebration of one another. Whether you are a brand-new member or an existing FNF member updating your details, visit My Profile to keep your birthday and contact info up to date!"
+        };
+
+        const DEFAULT_MEMBERS = [
+            {
+                id: 1,
+                name: "Seyi Adeyemi",
+                role: "CEO",
+                email: "seyi.ceo@fnffamily.org",
+                phone: "+234 802 100 1001",
+                location: "Lagos",
+                birthday: "Mar 19",
+                joined: "Jan 10, 2024",
+                bio: "Founder & FNF CEO • Visionary leader & community builder.",
+                isNew: false,
+                kudos: 28,
+                waved: false,
+                optIn: true,
+                wishes: []
+            },
+            {
+                id: 2,
+                name: "Ngozi Nwosu",
+                role: "Admin",
+                email: "ngozi.admin@fnffamily.org",
+                phone: "+234 803 200 2002",
+                location: "Abuja",
+                birthday: "Jul 04",
+                joined: "Feb 14, 2024",
+                bio: "FNF Events & Celebrations Admin • Brunch & hangout curator.",
+                isNew: false,
+                kudos: 21,
+                waved: false,
+                optIn: true,
+                wishes: []
+            },
+            {
+                id: 3,
+                name: "Tunde Bakare",
+                role: "Member",
+                email: "tunde.b@fnffamily.org",
+                phone: "+234 805 300 3003",
+                location: "Lagos",
+                birthday: "Nov 14",
+                joined: "May 22, 2025",
+                bio: "Fintech Architect • Weekend cyclist & espresso lover.",
+                isNew: false,
+                kudos: 34,
+                waved: false,
+                optIn: true,
+                wishes: [
+                    { from: "Seyi Adeyemi (CEO)", text: "Belated Happy Birthday Tunde! Keep living Fearless and Flawless!" }
+                ]
+            },
+            {
+                id: 4,
+                name: "Chidinma Eze",
+                role: "Member",
+                email: "chidinma.eze@fnffamily.org",
+                phone: "+234 809 400 4004",
+                location: "Lagos",
+                birthday: "Nov 18",
+                joined: "Nov 05, 2026",
+                bio: "UX Researcher • Just joined FNF Family, loves pottery & cinema.",
+                isNew: true,
+                kudos: 16,
+                waved: false,
+                optIn: true,
+                wishes: [
+                    { from: "Ngozi Nwosu (Admin)", text: "Counting down to Nov 18! Get ready to celebrate Chidinma! 🎂" }
+                ]
+            },
+            {
+                id: 5,
+                name: "David Mensah",
+                role: "Admin",
+                email: "david.m@fnffamily.org",
+                phone: "+233 24 500 5005",
+                location: "Accra",
+                birthday: "Nov 22",
+                joined: "Aug 19, 2024",
+                bio: "FNF Community Admin • Photography & rooftop hangouts.",
+                isNew: false,
+                kudos: 19,
+                waved: false,
+                optIn: true,
+                wishes: []
+            },
+            {
+                id: 6,
+                name: "Kemi Balogun",
+                role: "Member",
+                email: "kemi.balogun@fnffamily.org",
+                phone: "+234 812 600 6006",
+                location: "London",
+                birthday: "Nov 29",
+                joined: "Nov 09, 2026",
+                bio: "Brand Strategist • Book club host & culinary explorer.",
+                isNew: true,
+                kudos: 12,
+                waved: false,
+                optIn: true,
+                wishes: []
+            },
+            {
+                id: 7,
+                name: "Tariq Al-Mansoor",
+                role: "Member",
+                email: "tariq.m@fnffamily.org",
+                phone: "+234 814 700 7007",
+                location: "Lagos",
+                birthday: "Dec 12",
+                joined: "Nov 12, 2026",
+                bio: "Clean Energy Analyst • Chess tactician & marathon runner.",
+                isNew: true,
+                kudos: 9,
+                waved: false,
+                optIn: true,
+                wishes: []
+            },
+            {
+                id: 8,
+                name: "Amara Okafor",
+                role: "Member",
+                email: "amara.o@fnffamily.org",
+                phone: "+234 818 800 8008",
+                location: "Lagos",
+                birthday: "Apr 27",
+                joined: "Sep 03, 2025",
+                bio: "Digital Health Lead • Salsa dancer & botanical collector.",
+                isNew: false,
+                kudos: 15,
+                waved: false,
+                optIn: true,
+                wishes: []
+            }
+        ];
+
+        const DEFAULT_EVENTS = [
+            {
+                id: 201,
+                title: "Monthly FNF Sunset Hangout",
+                date: "Sat, Nov 28 • 4:30 PM",
+                tag: "Hangout",
+                venue: "Victoria Island, Lagos",
+                desc: "Unwind with cocktails, music, and November birthday toasts with the FNF Family.",
+                rsvpCount: 14,
+                userRsvped: true
+            },
+            {
+                id: 202,
+                title: "FNF Virtual Trivia & Games Night",
+                date: "Fri, Dec 04 • 8:00 PM",
+                tag: "Games & Trivia",
+                venue: "Google Meet (Link in Group)",
+                desc: "Fast-paced pop culture trivia, charades, and bragging rights across Lagos, Abuja & London.",
+                rsvpCount: 19,
+                userRsvped: false
+            },
+            {
+                id: 203,
+                title: "Year-End Community Outreach",
+                date: "Sat, Dec 19 • 10:00 AM",
+                tag: "Outreach",
+                venue: "Lekki Community Center",
+                desc: "Giving back together as Fearless and Flawless with holiday care packages.",
+                rsvpCount: 11,
+                userRsvped: false
+            }
+        ];
+
+        const DEFAULT_WEEKLY_TASKS = [
+            {
+                id: 301,
+                roleTitle: "Birthday & Welfare Lead",
+                description: "Coordinate birthday shoutouts, cards, and celebrant check-ins.",
+                icon: "cake",
+                memberId: 2,
+                status: "Active"
+            },
+            {
+                id: 302,
+                roleTitle: "Games & Trivia Host",
+                description: "Prepare Friday trivia prompts and host live interactive rounds.",
+                icon: "gamepad-2",
+                memberId: 5,
+                status: "Preparing"
+            },
+            {
+                id: 303,
+                roleTitle: "Welcome & Onboarding Buddy",
+                description: "Greet new FNF members and help them complete their profiles.",
+                icon: "sparkles",
+                memberId: 8,
+                status: "Active"
+            },
+            {
+                id: 304,
+                roleTitle: "Media & Announcements",
+                description: "Share weekly recaps, event flyers, and hangout highlights.",
+                icon: "megaphone",
+                memberId: 3,
+                status: "On Duty"
+            }
+        ];
+
+        const DEFAULT_LOGS = [
+            {
+                id: 101,
+                time: "Yesterday, Nov 15 • 08:00 AM",
+                celebrant: "Chidinma Eze (3-Day Early Reminder)",
+                recipients: "CEO, Admins & Opt-In Members",
+                status: "Delivered"
+            },
+            {
+                id: 102,
+                time: "Nov 14, 2026 • 08:00 AM",
+                celebrant: "Tunde Bakare (Birthday Morning Alert)",
+                recipients: "CEO, Admins & Opt-In Members",
+                status: "Delivered"
+            },
+            {
+                id: 103,
+                time: "Nov 12, 2026 • 02:15 PM",
+                celebrant: "Welcome Digest: Tariq Al-Mansoor",
+                recipients: "FNF Family (All 8 Members)",
+                status: "Delivered"
+            }
+        ];
+
+        // Application State
+        let currentRole = 'member';
+        let activeTab = 'dashboard';
+        let currentWishTarget = '';
+        let dashDirRoleFilter = 'ALL';
+        let charter = JSON.parse(JSON.stringify(DEFAULT_CHARTER));
+        let members = JSON.parse(JSON.stringify(DEFAULT_MEMBERS));
+        let events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+        let weeklyTasks = JSON.parse(JSON.stringify(DEFAULT_WEEKLY_TASKS));
+        let emailLogs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+        let mailRules = { threeDay: true, dayOf: true, welcomeDigest: true };
+// ... existing code ... -->
+        // Load & Save State (With Resilient Fallback so Members Never Disappear)
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.charter && parsed.charter.title) charter = parsed.charter;
+                    if (Array.isArray(parsed.members) && parsed.members.length > 0) {
+                        members = parsed.members;
+                    } else {
+                        members = JSON.parse(JSON.stringify(DEFAULT_MEMBERS));
+                    }
+                    if (Array.isArray(parsed.events) && parsed.events.length > 0) events = parsed.events;
+                    if (Array.isArray(parsed.weeklyTasks)) weeklyTasks = parsed.weeklyTasks;
+                    if (Array.isArray(parsed.emailLogs)) emailLogs = parsed.emailLogs;
+                    if (parsed.mailRules) mailRules = parsed.mailRules;
+                }
+            } catch (e) {
+                console.warn("Could not read localStorage, falling back to default FNF members:", e);
+                members = JSON.parse(JSON.stringify(DEFAULT_MEMBERS));
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    charter,
+                    members,
+                    events,
+                    weeklyTasks,
+                    emailLogs,
+                    mailRules
+                }));
+            } catch (e) {
+                console.warn("Could not save to localStorage:", e);
+            }
+        }
+
+        function resetDemoData() {
+            document.getElementById('confirm-title').textContent = "Reset FNF Demo Data?";
+            document.getElementById('confirm-message').textContent = "This restores all default Fearless and Flawless members, weekly tasks, events, and logs.";
+            document.getElementById('confirm-proceed-btn').onclick = () => {
+                localStorage.removeItem(STORAGE_KEY);
+                charter = JSON.parse(JSON.stringify(DEFAULT_CHARTER));
+                members = JSON.parse(JSON.stringify(DEFAULT_MEMBERS));
+                events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+                weeklyTasks = JSON.parse(JSON.stringify(DEFAULT_WEEKLY_TASKS));
+                emailLogs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+                mailRules = { threeDay: true, dayOf: true, welcomeDigest: true };
+                saveState();
+                closeModal('modal-confirm');
+                renderAll();
+                showToast("FNF Family demo data restored!", "info");
+            };
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+        }
+
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            } else {
+                document.documentElement.classList.add('light');
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                localStorage.setItem(THEME_KEY, 'light');
+            } else {
+                document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+                localStorage.setItem(THEME_KEY, 'dark');
+            }
+        }
+
+        function populateDaySelector() {
+            const select = document.getElementById('mp-bday-day');
+            if (!select) return;
+            select.innerHTML = Array.from({ length: 31 }, (_, i) => {
+                const d = i + 1;
+                return `<option value="${d}">${String(d).padStart(2, '0')}</option>`;
+            }).join('');
+        }
+
+        // URL Role Detection & Role Switcher
+        function detectInitialRoleFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('admin') === 'true') {
+                switchRole('admin', false);
+            } else {
+                switchRole('member', false);
+            }
+        }
+
+        function switchRole(role, updateURL = true) {
+            currentRole = role;
+            const isAdmin = role === 'admin';
+
+            if (updateURL) {
+                try {
+                    const url = new URL(window.location.href);
+                    if (isAdmin) {
+                        url.searchParams.set('admin', 'true');
+                    } else {
+                        url.searchParams.delete('admin');
+                    }
+                    window.history.replaceState({}, '', url.toString());
+                } catch (e) {}
+            }
+
+            const btnMember = document.getElementById('btn-role-member');
+            const btnAdmin = document.getElementById('btn-role-admin');
+            if (isAdmin) {
+                btnAdmin.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs";
+                btnMember.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+            } else {
+                btnMember.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs";
+                btnAdmin.className = "flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white";
+            }
+
+            // Update Active User Pill
+            document.getElementById('active-user-avatar').textContent = isAdmin ? 'SA' : 'AO';
+            document.getElementById('active-user-name').textContent = isAdmin ? 'Seyi Adeyemi' : 'Amara Okafor';
+            document.getElementById('active-user-badge').textContent = isAdmin ? 'CEO / Admin' : 'FNF Member';
+
+            // Toggle Admin-Only Tabs & Buttons
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.toggle('hidden', !isAdmin);
+                tab.classList.toggle('flex', isAdmin);
+            });
+
+            const editWelcomeBtn = document.getElementById('btn-edit-welcome-guide');
+            const resetDemoBtn = document.getElementById('btn-reset-demo');
+            const eventsAddBtn = document.getElementById('btn-events-admin-add');
+            const tasksManageBtn = document.getElementById('btn-tasks-admin-manage');
+
+            if (editWelcomeBtn) {
+                editWelcomeBtn.classList.toggle('hidden', !isAdmin);
+                editWelcomeBtn.classList.toggle('inline-flex', isAdmin);
+            }
+            if (resetDemoBtn) {
+                resetDemoBtn.classList.toggle('hidden', !isAdmin);
+                resetDemoBtn.classList.toggle('inline-flex', isAdmin);
+            }
+            if (eventsAddBtn) {
+                eventsAddBtn.classList.toggle('hidden', !isAdmin);
+                eventsAddBtn.classList.toggle('inline-flex', isAdmin);
+            }
+            if (tasksManageBtn) {
+                tasksManageBtn.classList.toggle('hidden', !isAdmin);
+                tasksManageBtn.classList.toggle('inline-flex', isAdmin);
+            }
+
+            // Update Role Banner
+            const bannerText = document.getElementById('role-banner-text');
+            const bannerCta = document.getElementById('role-banner-cta');
+            if (isAdmin) {
+                bannerText.innerHTML = `<strong>CEO & Admin Mode Active (?admin=true):</strong> Full governance enabled for member roles, weekly task handlers, events, and automated birthday mail.`;
+                bannerCta.textContent = "Switch to Member View →";
+                bannerCta.onclick = () => switchRole('member');
+            } else {
+                bannerText.innerHTML = `Welcome to the <strong>FNF Family Member Hub</strong>! Explore upcoming birthdays, weekly task handlers, events, or <button onclick="switchTab('my-profile')" class="underline font-bold text-brand-700 dark:text-brand-300 hover:text-brand-900">update your profile</button>.`;
+                bannerCta.textContent = "CEO / Admin Portal (?admin=true) →";
+                bannerCta.onclick = () => switchRole('admin');
+                if (activeTab === 'admin-governance' || activeTab === 'automation') {
+                    activeTab = 'dashboard';
+                }
+            }
+
+            switchTab(activeTab);
+            renderAll();
+        }
+
+        // Tab Navigation
+        function switchTab(tabName) {
+            activeTab = tabName;
+            const views = ['dashboard', 'birthdays', 'events', 'my-profile', 'directory', 'admin-governance', 'automation'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.toggle('hidden', v !== tabName);
+            });
+
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                const isTarget = btn.id === `tab-${tabName}`;
+                if (isTarget) {
+                    btn.classList.add('active', 'border-brand-600', 'text-brand-600', 'dark:text-brand-400', 'dark:border-brand-400', 'font-semibold');
+                    btn.classList.remove('border-transparent', 'text-slate-600', 'dark:text-slate-400', 'font-medium');
+                } else {
+                    btn.classList.remove('active', 'border-brand-600', 'text-brand-600', 'dark:text-brand-400', 'dark:border-brand-400', 'font-semibold');
+                    btn.classList.add('border-transparent', 'text-slate-600', 'dark:text-slate-400', 'font-medium');
+                }
+            });
+            lucide.createIcons();
+        }
+
+        // Helper Utilities
+        function getInitials(name) {
+            return (name || 'FN')
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(n => n[0].toUpperCase())
+                .join('');
+        }
+
+        function getRoleBadge(role) {
+            if (role === 'CEO') {
+                return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-200/70 dark:border-amber-700/60"><i data-lucide="crown" class="w-3 h-3"></i> CEO</span>`;
+            }
+            if (role === 'Admin') {
+                return `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 border border-brand-200/70 dark:border-brand-700/60"><i data-lucide="shield" class="w-3 h-3"></i> Admin</span>`;
+            }
+            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Member</span>`;
+        }
+
+        function getBirthdayStats(bdayStr) {
+            const monthMap = {
+                Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+                Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+            };
+            const parts = (bdayStr || 'Nov 16').trim().split(/\s+/);
+            const mIdx = monthMap[parts[0]] !== undefined ? monthMap[parts[0]] : 10;
+            const dayNum = parseInt(parts[1], 10) || 16;
+
+            let target = new Date(TODAY_REF.getFullYear(), mIdx, dayNum);
+            const todayMidnight = new Date(TODAY_REF.getFullYear(), TODAY_REF.getMonth(), TODAY_REF.getDate());
+            let diffDays = Math.round((target - todayMidnight) / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                target = new Date(TODAY_REF.getFullYear() + 1, mIdx, dayNum);
+                diffDays = Math.round((target - todayMidnight) / (1000 * 60 * 60 * 24));
+            }
+
+            return {
+                isTodayBday: diffDays === 0,
+                countdownDays: diffDays,
+                label: diffDays === 0 ? 'Today!' : (diffDays === 1 ? 'Tomorrow' : `In ${diffDays} days`)
+            };
+        }
+
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-600 text-white border-emerald-500',
+                admin: 'bg-amber-600 text-white border-amber-500',
+                info: 'bg-slate-900 dark:bg-slate-800 text-white border-slate-700'
+            };
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-lg border text-xs font-semibold transition-all duration-300 ${colors[type] || colors.info}`;
+            toast.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 shrink-0"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3400);
+        }
+
+        // ==========================================
+        // WELCOME ADDRESS & NEW MEMBER SPOTLIGHT
+        // ==========================================
+        function renderCharter() {
+            const titleEl = document.getElementById('welcome-guide-title');
+            const bodyEl = document.getElementById('welcome-guide-body');
+            if (titleEl) titleEl.textContent = charter.title;
+            if (bodyEl) bodyEl.textContent = charter.body;
+        }
+
+        function toggleInlineWelcomeEdit() {
+            if (currentRole !== 'admin') return;
+            document.getElementById('inline-welcome-title').value = charter.title;
+            document.getElementById('inline-welcome-body').value = charter.body;
+            document.getElementById('welcome-charter-read').classList.add('hidden');
+            document.getElementById('welcome-charter-edit').classList.remove('hidden');
+        }
+
+        function cancelInlineWelcomeEdit() {
+            document.getElementById('welcome-charter-edit').classList.add('hidden');
+            document.getElementById('welcome-charter-read').classList.remove('hidden');
+        }
+
+        function saveInlineWelcomeEdit() {
+            if (currentRole !== 'admin') return;
+            const newTitle = document.getElementById('inline-welcome-title').value.trim();
+            const newBody = document.getElementById('inline-welcome-body').value.trim();
+            if (newTitle && newBody) {
+                charter = { title: newTitle, body: newBody };
+                saveState();
+                renderCharter();
+                cancelInlineWelcomeEdit();
+                showToast("Updated Fearless and Flawless Welcome Address!", "success");
+            }
+        }
+
+        function renderNewMembers() {
+            const grid = document.getElementById('new-members-grid');
+            if (!grid) return;
+            const newcomers = members.filter(m => m.isNew);
+            if (newcomers.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-xs text-slate-500">No new members in the spotlight right now.</div>`;
+                return;
+            }
+            grid.innerHTML = newcomers.map(m => `
+                <div class="glass-panel rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-3">
+                    <div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-display font-bold text-xs flex items-center justify-center shrink-0">
+                                    ${getInitials(m.name)}
+                                </div>
+                                <div class="min-w-0">
+                                    <h4 class="font-display font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${m.location || 'FNF Family'} • Joined ${m.joined}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mt-2.5 line-clamp-2">${m.bio}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                        <span class="text-[11px] text-slate-400">🎂 ${m.birthday}</span>
+                        <button onclick="waveWelcome(${m.id})" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${m.waved ? 'bg-emerald-600 text-white shadow-xs' : 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'}">
+                            <span>${m.waved ? 'Waved 👋' : 'Wave Welcome 👋'}</span>
+                            <span class="px-1.5 py-0.2 rounded-full text-[10px] ${m.waved ? 'bg-white/20 text-white' : 'bg-emerald-200/70 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200'}">${m.kudos || 0}</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function waveWelcome(memberId) {
+            const m = members.find(item => item.id === memberId);
+            if (!m) return;
+            if (!m.waved) {
+                m.waved = true;
+                m.kudos = (m.kudos || 0) + 1;
+                showToast(`You waved welcome to ${m.name}! 👋`, "success");
+            } else {
+                m.waved = false;
+                m.kudos = Math.max(0, (m.kudos || 1) - 1);
+            }
+            saveState();
+            renderNewMembers();
+        }
+
+        // ==========================================
+        // UPCOMING BIRTHDAYS RENDERING
+        // ==========================================
+        function renderBirthdays() {
+            const sorted = members
+                .map(m => ({ ...m, bdayMeta: getBirthdayStats(m.birthday) }))
+                .sort((a, b) => a.bdayMeta.countdownDays - b.bdayMeta.countdownDays);
+
+            const spotlight = sorted[0];
+            if (spotlight) {
+                const statName = document.getElementById('stat-today-bday');
+                const statBtn = document.getElementById('btn-stat-wish');
+                const navBadge = document.getElementById('nav-bday-badge');
+                if (statName) statName.textContent = `${spotlight.name} (${spotlight.birthday})`;
+                if (statBtn) statBtn.onclick = () => openWishModal(spotlight.name);
+                if (navBadge) navBadge.textContent = spotlight.bdayMeta.label;
+            }
+
+            // Dashboard Compact List (Top 4)
+            const dashList = document.getElementById('dashboard-birthday-list');
+            if (dashList) {
+                dashList.innerHTML = sorted.slice(0, 4).map(m => `
+                    <div class="p-3 rounded-xl ${m.bdayMeta.countdownDays <= 3 ? 'bg-coral-50/70 dark:bg-coral-950/30 border border-coral-200/70 dark:border-coral-800/50' : 'bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800'} flex items-center justify-between gap-2.5">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-full bg-coral-100 dark:bg-coral-900/50 text-coral-700 dark:text-coral-300 font-bold text-xs flex items-center justify-center shrink-0">
+                                ${getInitials(m.name)}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-slate-900 dark:text-white truncate">${m.name}</p>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">🎂 ${m.birthday} • <span class="font-semibold text-coral-600 dark:text-coral-400">${m.bdayMeta.label}</span></p>
+                            </div>
+                        </div>
+                        <button onclick="openWishModal('${m.name.replace(/'/g, "\\'")}')" class="px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-coral-500 hover:text-white text-coral-600 dark:text-coral-300 border border-coral-200/80 dark:border-slate-700 text-xs font-semibold transition-colors shrink-0">
+                            Wish 🎉
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Full Birthdays Grid
+            const fullGrid = document.getElementById('full-birthdays-grid');
+            if (fullGrid) {
+                fullGrid.innerHTML = sorted.map(m => `
+                    <div class="glass-panel rounded-2xl p-5 border ${m.bdayMeta.countdownDays <= 3 ? 'border-coral-300 dark:border-coral-800' : 'border-slate-200/80 dark:border-slate-800'} shadow-xs flex flex-col justify-between gap-4">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-coral-500 to-amber-500 text-white font-display font-bold text-sm flex items-center justify-center">
+                                        ${getInitials(m.name)}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-base text-slate-900 dark:text-white">${m.name}</h4>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">🎂 ${m.birthday} • ${m.location || 'FNF Family'}</p>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${m.bdayMeta.countdownDays <= 3 ? 'bg-coral-100 dark:bg-coral-900/60 text-coral-700 dark:text-coral-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}">
+                                    ${m.bdayMeta.label}
+                                </span>
+                            </div>
+
+                            ${(m.wishes && m.wishes.length > 0) ? `
+                                <div class="mt-4 space-y-2">
+                                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Celebration Wall (${m.wishes.length})</p>
+                                    ${m.wishes.map(w => `
+                                        <div class="p-2.5 rounded-xl bg-amber-50/70 dark:bg-slate-800/80 border border-amber-200/50 dark:border-slate-700 text-xs">
+                                            <p class="font-semibold text-slate-800 dark:text-slate-100">${w.from}</p>
+                                            <p class="text-slate-600 dark:text-slate-300 mt-0.5">"${w.text}"</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : `
+                                <p class="mt-4 text-xs text-slate-400 italic">Be the first to drop a Fearless & Flawless birthday wish!</p>
+                            `}
+                        </div>
+
+                        <button onclick="openWishModal('${m.name.replace(/'/g, "\\'")}')" class="w-full py-2.5 rounded-xl bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold shadow-xs transition-colors">
+                            Send Birthday Wish 🎉
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ==========================================
+        // UPCOMING EVENTS & RSVP
+        // ==========================================
+        function renderEvents() {
+            const statEl = document.getElementById('stat-upcoming-events');
+            if (statEl) statEl.textContent = events.length;
+
+            // Dashboard Events List
+            const dashList = document.getElementById('dashboard-events-list');
+            if (dashList) {
+                dashList.innerHTML = events.slice(0, 3).map(ev => `
+                    <div class="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 mb-1">${ev.tag}</span>
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white">${ev.title}</h4>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${ev.date} • ${ev.venue}</p>
+                            </div>
+                            <button onclick="toggleEventRsvp(${ev.id})" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-colors shrink-0 ${ev.userRsvped ? 'bg-emerald-600 text-white' : 'bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 hover:bg-brand-100'}">
+                                ${ev.userRsvped ? 'Going ✓' : 'RSVP'}
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Full Events Grid
+            const fullGrid = document.getElementById('full-events-grid');
+            if (fullGrid) {
+                fullGrid.innerHTML = events.map(ev => `
+                    <div class="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-2">
+                                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300">${ev.tag}</span>
+                                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">${ev.rsvpCount} Going</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base text-slate-900 dark:text-white">${ev.title}</h4>
+                            <p class="text-xs font-medium text-brand-600 dark:text-brand-400 mt-1">${ev.date}</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">📍 ${ev.venue}</p>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-3 leading-relaxed">${ev.desc}</p>
+                        </div>
+                        <button onclick="toggleEventRsvp(${ev.id})" class="w-full py-2.5 rounded-xl text-xs font-semibold transition-colors ${ev.userRsvped ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-brand-600 hover:bg-brand-700 text-white'}">
+                            ${ev.userRsvped ? 'RSVP Confirmed ✓ (Tap to Cancel)' : 'RSVP to Event'}
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Admin Events List
+            const adminList = document.getElementById('admin-events-list');
+            if (adminList) {
+                adminList.innerHTML = events.map(ev => `
+                    <div class="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-slate-900 dark:text-white truncate">${ev.title}</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${ev.date} • ${ev.venue} (${ev.rsvpCount} RSVPs)</p>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button onclick="openEventModal(${ev.id})" class="p-1.5 rounded-lg text-slate-500 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/50" title="Edit Event">
+                                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="deleteEvent(${ev.id})" class="p-1.5 rounded-lg text-slate-500 hover:text-coral-600 hover:bg-coral-50 dark:hover:bg-coral-950/50" title="Delete Event">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleEventRsvp(eventId) {
+            const ev = events.find(e => e.id === eventId);
+            if (!ev) return;
+            ev.userRsvped = !ev.userRsvped;
+            ev.rsvpCount = Math.max(0, ev.rsvpCount + (ev.userRsvped ? 1 : -1));
+            saveState();
+            renderEvents();
+            lucide.createIcons();
+            showToast(ev.userRsvped ? `RSVP confirmed for ${ev.title}! 🎉` : `RSVP cancelled for ${ev.title}.`, "success");
+        }
+
+        // ==========================================
+        // WEEKLY TASK HANDLERS (MEMBER & ADMIN CRUD)
+        // ==========================================
+        function renderWeeklyTasks() {
+            const statEl = document.getElementById('stat-weekly-tasks');
+            if (statEl) statEl.textContent = `${weeklyTasks.length} Active`;
+
+            // Dashboard Compact Cards
+            const dashGrid = document.getElementById('dashboard-task-handlers');
+            if (dashGrid) {
+                if (weeklyTasks.length === 0) {
+                    dashGrid.innerHTML = `<div class="col-span-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 text-xs text-slate-500">No weekly tasks assigned yet.</div>`;
+                } else {
+                    dashGrid.innerHTML = weeklyTasks.map(task => {
+                        const handler = members.find(m => m.id === task.memberId);
+                        return `
+                            <div class="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-xs font-bold text-slate-900 dark:text-white truncate">${task.roleTitle}</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${task.status === 'Completed' ? 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300'}">${task.status}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">${task.description}</p>
+                                <div class="pt-1 flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 font-bold text-[10px] flex items-center justify-center shrink-0">
+                                        ${handler ? getInitials(handler.name) : '?'}
+                                    </div>
+                                    <span class="text-xs font-semibold text-brand-700 dark:text-brand-300 truncate">${handler ? handler.name : 'Unassigned'}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // Full Task Handlers Grid (Events & Weekly Tasks Tab)
+            const fullGrid = document.getElementById('full-task-handlers-grid');
+            if (fullGrid) {
+                fullGrid.innerHTML = weeklyTasks.map(task => {
+                    const handler = members.find(m => m.id === task.memberId);
+                    return `
+                        <div class="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-2">
+                                    <div class="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+                                        <i data-lucide="${task.icon || 'clipboard-check'}" class="w-4 h-4"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${task.status === 'Completed' ? 'bg-slate-200 dark:bg-slate-800 text-slate-600' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300'}">${task.status}</span>
+                                </div>
+                                <h4 class="font-display font-bold text-sm text-slate-900 dark:text-white">${task.roleTitle}</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">${task.description}</p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center shrink-0">
+                                    ${handler ? getInitials(handler.name) : '?'}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white truncate">${handler ? handler.name : 'Unassigned'}</p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${handler ? handler.role : 'FNF Member'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Admin Weekly Task Handlers Roster (With Add, Edit, Reassign, & Delete)
+            const adminList = document.getElementById('admin-task-handlers-list');
+            if (adminList) {
+                if (weeklyTasks.length === 0) {
+                    adminList.innerHTML = `<div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 text-center">No weekly tasks yet. Click "+ Add New Weekly Task" above.</div>`;
+                } else {
+                    adminList.innerHTML = weeklyTasks.map(task => `
+                        <div class="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-2.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white truncate">${task.roleTitle}</p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">${task.description}</p>
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <button onclick="openTaskModal(${task.id})" title="Edit Weekly Task" class="p-1.5 rounded-lg text-slate-500 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/50">
+                                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <button onclick="confirmDeleteWeeklyTask(${task.id})" title="Delete Old Task" class="p-1.5 rounded-lg text-slate-500 hover:text-coral-600 hover:bg-coral-50 dark:hover:bg-coral-950/50">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <select onchange="assignWeeklyTaskHandler(${task.id}, this.value)" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-800 dark:text-slate-100">
+                                    ${members.map(m => `<option value="${m.id}" ${m.id === task.memberId ? 'selected' : ''}>${m.name}</option>`).join('')}
+                                </select>
+                                <select onchange="updateWeeklyTaskStatus(${task.id}, this.value)" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-800 dark:text-slate-100">
+                                    <option value="Active" ${task.status === 'Active' ? 'selected' : ''}>Active</option>
+                                    <option value="On Duty" ${task.status === 'On Duty' ? 'selected' : ''}>On Duty</option>
+                                    <option value="Preparing" ${task.status === 'Preparing' ? 'selected' : ''}>Preparing</option>
+                                    <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function openTaskModal(taskId = null) {
+            if (currentRole !== 'admin') return;
+            const modal = document.getElementById('modal-task');
+            const title = document.getElementById('modal-task-title');
+            const handlerSelect = document.getElementById('task-handler-select');
+
+            handlerSelect.innerHTML = members.map(m => `<option value="${m.id}">${m.name} (${m.role})</option>`).join('');
+
+            if (taskId) {
+                const task = weeklyTasks.find(t => t.id === taskId);
+                if (!task) return;
+                title.textContent = "Admin: Edit Weekly Task";
+                document.getElementById('task-id').value = task.id;
+                document.getElementById('task-role-title').value = task.roleTitle;
+                document.getElementById('task-description').value = task.description;
+                handlerSelect.value = String(task.memberId);
+                document.getElementById('task-status-select').value = task.status;
+            } else {
+                title.textContent = "Admin: Add New Weekly Task";
+                document.getElementById('form-task').reset();
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-status-select').value = 'Active';
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function saveWeeklyTask(e) {
+            e.preventDefault();
+            if (currentRole !== 'admin') return;
+            const idVal = document.getElementById('task-id').value;
+            const roleTitle = document.getElementById('task-role-title').value.trim();
+            const description = document.getElementById('task-description').value.trim();
+            const memberId = Number(document.getElementById('task-handler-select').value);
+            const status = document.getElementById('task-status-select').value;
+
+            if (!roleTitle || !description) return;
+
+            if (idVal) {
+                const task = weeklyTasks.find(t => t.id === Number(idVal));
+                if (task) {
+                    Object.assign(task, { roleTitle, description, memberId, status });
+                    showToast(`Updated weekly task "${roleTitle}".`, "success");
+                }
+            } else {
+                weeklyTasks.unshift({
+                    id: Date.now(),
+                    roleTitle,
+                    description,
+                    icon: "clipboard-check",
+                    memberId,
+                    status
+                });
+                showToast(`Added new weekly task "${roleTitle}"!`, "success");
+            }
+            saveState();
+            closeModal('modal-task');
+            renderWeeklyTasks();
+            lucide.createIcons();
+        }
+
+        function confirmDeleteWeeklyTask(taskId) {
+            if (currentRole !== 'admin') return;
+            const task = weeklyTasks.find(t => t.id === taskId);
+            if (!task) return;
+            document.getElementById('confirm-title').textContent = `Delete "${task.roleTitle}"?`;
+            document.getElementById('confirm-message').textContent = "This will remove this weekly task from both Admin Governance and Member View.";
+            document.getElementById('confirm-proceed-btn').onclick = () => {
+                weeklyTasks = weeklyTasks.filter(t => t.id !== taskId);
+                saveState();
+                closeModal('modal-confirm');
+                renderWeeklyTasks();
+                lucide.createIcons();
+                showToast(`Deleted weekly task "${task.roleTitle}".`, "info");
+            };
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+        }
+
+        function confirmClearCompletedTasks() {
+            if (currentRole !== 'admin') return;
+            const completedCount = weeklyTasks.filter(t => t.status === 'Completed').length;
+            if (completedCount === 0) {
+                showToast("No tasks marked as Completed right now.", "info");
+                return;
+            }
+            document.getElementById('confirm-title').textContent = `Clear ${completedCount} Completed Task(s)?`;
+            document.getElementById('confirm-message').textContent = "This removes all weekly tasks currently marked as Completed.";
+            document.getElementById('confirm-proceed-btn').onclick = () => {
+                weeklyTasks = weeklyTasks.filter(t => t.status !== 'Completed');
+                saveState();
+                closeModal('modal-confirm');
+                renderWeeklyTasks();
+                lucide.createIcons();
+                showToast(`Cleared ${completedCount} completed weekly task(s).`, "success");
+            };
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+        }
+
+        // ==========================================
+        // LEADERSHIP, MY PROFILE & MEMBER DIRECTORIES
+        // ==========================================
+        function renderLeadership() {
+            const list = document.getElementById('leadership-list');
+            if (!list) return;
+            const leaders = members.filter(m => m.role === 'CEO' || m.role === 'Admin');
+            list.innerHTML = leaders.map(l => `
+                <div class="p-3 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-9 h-9 rounded-full ${l.role === 'CEO' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300' : 'bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300'} font-bold text-xs flex items-center justify-center shrink-0">
+                            ${getInitials(l.name)}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-slate-900 dark:text-white truncate">${l.name}</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${l.location || 'FNF HQ'} • ${l.bio}</p>
+                        </div>
+                    </div>
+                    <div class="shrink-0">
+                        ${getRoleBadge(l.role)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setDashDirFilter(roleFilter) {
+            dashDirRoleFilter = roleFilter;
+            document.querySelectorAll('.dash-filter-pill').forEach(btn => {
+                const isSelected = btn.getAttribute('data-filter') === roleFilter;
+                if (isSelected) {
+                    btn.className = "dash-filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 text-white shadow-xs transition-colors";
+                } else {
+                    btn.className = "dash-filter-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors";
+                }
+            });
+            renderDashboardMemberDirectory();
+            lucide.createIcons();
+        }
+
+        function renderDashboardMemberDirectory() {
+            const grid = document.getElementById('dashboard-member-directory-grid');
+            const countBadge = document.getElementById('dash-dir-count-badge');
+            if (!grid) return;
+
+            const query = (document.getElementById('dash-dir-search')?.value || '').toLowerCase().trim();
+            const filtered = members.filter(m => {
+                const matchesRole = dashDirRoleFilter === 'ALL' || m.role === dashDirRoleFilter;
+                const matchesSearch = !query ||
+                    m.name.toLowerCase().includes(query) ||
+                    (m.location && m.location.toLowerCase().includes(query)) ||
+                    (m.bio && m.bio.toLowerCase().includes(query));
+                return matchesRole && matchesSearch;
+            });
+
+            if (countBadge) {
+                countBadge.textContent = `${filtered.length} ${filtered.length === 1 ? 'Member' : 'Members'}`;
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500">No FNF members match your filter. Click <strong>Join Directory</strong> above to add yourself!</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(m => {
+                const bday = getBirthdayStats(m.birthday);
+                return `
+                    <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-700 transition-all flex flex-col justify-between gap-3">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="w-10 h-10 rounded-xl bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 font-display font-bold text-xs flex items-center justify-center shrink-0">
+                                        ${getInitials(m.name)}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="font-display font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</h4>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">📍 ${m.location || 'FNF Family'}</p>
+                                    </div>
+                                </div>
+                                ${getRoleBadge(m.role)}
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-2.5 line-clamp-2">${m.bio}</p>
+                        </div>
+
+                        <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="text-slate-500 dark:text-slate-400">🎂 ${m.birthday} (${bday.label})</span>
+                                ${m.isNew ? `<span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 font-bold text-[10px]">New</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="openWishModal('${m.name.replace(/'/g, "\\'")}')" class="flex-1 py-1.5 px-2.5 rounded-xl bg-coral-50 dark:bg-coral-950/40 hover:bg-coral-500 hover:text-white text-coral-600 dark:text-coral-300 text-[11px] font-semibold transition-colors">
+                                    Wish 🎉
+                                </button>
+                                <button onclick="editMemberInMyProfile(${m.id})" class="py-1.5 px-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-600 hover:text-white text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition-colors">
+                                    Edit My Info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMemberDirectoryCards() {
+            const grid = document.getElementById('member-directory-cards');
+            if (!grid) return;
+
+            const query = (document.getElementById('dir-search')?.value || '').toLowerCase().trim();
+            const roleFilter = document.getElementById('dir-role-filter')?.value || 'ALL';
+
+            const filtered = members.filter(m => {
+                const matchesRole = roleFilter === 'ALL' ||
+                    (roleFilter === 'NEW' ? m.isNew : m.role === roleFilter);
+                const matchesSearch = !query ||
+                    m.name.toLowerCase().includes(query) ||
+                    (m.location && m.location.toLowerCase().includes(query)) ||
+                    (m.bio && m.bio.toLowerCase().includes(query));
+                return matchesRole && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-8 rounded-2xl glass-panel border border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500">No FNF members found matching your search.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(m => {
+                const bday = getBirthdayStats(m.birthday);
+                return `
+                    <div class="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-600 text-white font-display font-bold text-sm flex items-center justify-center shrink-0">
+                                        ${getInitials(m.name)}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="font-display font-bold text-base text-slate-900 dark:text-white truncate">${m.name}</h4>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 truncate">📍 ${m.location || 'FNF Family'} • Joined ${m.joined}</p>
+                                    </div>
+                                </div>
+                                ${getRoleBadge(m.role)}
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-3 leading-relaxed">${m.bio}</p>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">🎂 ${m.birthday} (${bday.label})</span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="openWishModal('${m.name.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-xl bg-coral-50 dark:bg-coral-950/40 hover:bg-coral-500 hover:text-white text-coral-600 dark:text-coral-300 text-xs font-semibold transition-colors">
+                                    Wish 🎉
+                                </button>
+                                <button onclick="editMemberInMyProfile(${m.id})" class="px-3 py-1.5 rounded-xl bg-brand-50 dark:bg-brand-950/50 hover:bg-brand-600 hover:text-white text-brand-700 dark:text-brand-300 text-xs font-semibold transition-colors">
+                                    Update Info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // MY PROFILE SELF-SERVICE (NEW & OLD MEMBERS)
+        // ==========================================
+        function populateMyProfilePicker() {
+            const picker = document.getElementById('mp-member-picker');
+            if (!picker) return;
+            const currentVal = picker.value || '8';
+            picker.innerHTML = members.map(m => `<option value="${m.id}">${m.name} (${m.role} • ${m.birthday})</option>`).join('');
+            if (members.some(m => String(m.id) === String(currentVal))) {
+                picker.value = currentVal;
+            } else if (members.length > 0) {
+                picker.value = String(members[0].id);
+            }
+            loadMemberIntoMyProfile(picker.value);
+        }
+
+        function selectProfileActionMode(mode) {
+            document.getElementById('mp-mode').value = mode;
+            const tabClaim = document.getElementById('mp-tab-claim');
+            const tabNew = document.getElementById('mp-tab-new');
+            const claimBox = document.getElementById('mp-claim-box');
+
+            if (mode === 'claim') {
+                tabClaim.className = "pb-3 px-2 text-xs sm:text-sm font-bold border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 dark:border-brand-400 transition-colors";
+                tabNew.className = "pb-3 px-2 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors";
+                claimBox.classList.remove('hidden');
+                populateMyProfilePicker();
+            } else {
+                tabNew.className = "pb-3 px-2 text-xs sm:text-sm font-bold border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 dark:border-brand-400 transition-colors";
+                tabClaim.className = "pb-3 px-2 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors";
+                claimBox.classList.add('hidden');
+                document.getElementById('form-my-profile').reset();
+                document.getElementById('mp-mode').value = 'new';
+                document.getElementById('mp-selected-id').value = '';
+                setMyProfileNewFlag(true);
+            }
+        }
+
+        function setMyProfileNewFlag(isNew) {
+            const radioNew = document.getElementById('mp-radio-new');
+            const radioExisting = document.getElementById('mp-radio-existing');
+            const cardNew = document.getElementById('mp-card-new');
+            const cardExisting = document.getElementById('mp-card-existing');
+
+            radioNew.checked = isNew;
+            radioExisting.checked = !isNew;
+
+            if (isNew) {
+                cardNew.className = "cursor-pointer p-3.5 rounded-xl border-2 border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/40 transition-all flex items-start gap-2.5";
+                cardExisting.className = "cursor-pointer p-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 transition-all flex items-start gap-2.5";
+            } else {
+                cardExisting.className = "cursor-pointer p-3.5 rounded-xl border-2 border-brand-600 bg-brand-50/60 dark:bg-brand-950/50 transition-all flex items-start gap-2.5";
+                cardNew.className = "cursor-pointer p-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 transition-all flex items-start gap-2.5";
+            }
+        }
+
+        function loadMemberIntoMyProfile(memberId) {
+            const m = members.find(item => String(item.id) === String(memberId));
+            if (!m) return;
+            document.getElementById('mp-selected-id').value = m.id;
+            document.getElementById('mp-name').value = m.name;
+            document.getElementById('mp-email').value = m.email;
+            document.getElementById('mp-phone').value = m.phone || '';
+            document.getElementById('mp-location').value = m.location || '';
+            document.getElementById('mp-bio').value = m.bio || '';
+            document.getElementById('mp-optin').checked = m.optIn !== false;
+
+            const parts = (m.birthday || 'Nov 16').split(/\s+/);
+            if (parts[0]) document.getElementById('mp-bday-month').value = parts[0];
+            if (parts[1]) document.getElementById('mp-bday-day').value = String(parseInt(parts[1], 10) || 1);
+
+            setMyProfileNewFlag(Boolean(m.isNew));
+        }
+
+        function editMemberInMyProfile(memberId) {
+            switchTab('my-profile');
+            selectProfileActionMode('claim');
+            const picker = document.getElementById('mp-member-picker');
+            if (picker) {
+                picker.value = String(memberId);
+                loadMemberIntoMyProfile(memberId);
+            }
+        }
+
+        function submitMyProfileForm(e) {
+            e.preventDefault();
+            const mode = document.getElementById('mp-mode').value;
+            const selectedId = document.getElementById('mp-selected-id').value;
+            const name = document.getElementById('mp-name').value.trim();
+            const email = document.getElementById('mp-email').value.trim();
+            const month = document.getElementById('mp-bday-month').value;
+            const day = String(document.getElementById('mp-bday-day').value).padStart(2, '0');
+            const birthday = `${month} ${day}`;
+            const phone = document.getElementById('mp-phone').value.trim();
+            const location = document.getElementById('mp-location').value.trim() || 'Lagos';
+            const bio = document.getElementById('mp-bio').value.trim();
+            const optIn = document.getElementById('mp-optin').checked;
+            const isNew = document.getElementById('mp-radio-new').checked;
+
+            if (!name || !email) return;
+
+            let targetMember = null;
+            if (mode === 'claim' && selectedId) {
+                targetMember = members.find(m => String(m.id) === String(selectedId));
+            }
+            if (!targetMember) {
+                targetMember = members.find(m => m.email.toLowerCase() === email.toLowerCase() || m.name.toLowerCase() === name.toLowerCase());
+            }
+
+            if (targetMember) {
+                Object.assign(targetMember, { name, email, birthday, phone, location, bio, optIn, isNew });
+                showToast(`Updated ${name}'s profile in the FNF Family Directory!`, "success");
+            } else {
+                const newMember = {
+                    id: Date.now(),
+                    name,
+                    role: "Member",
+                    email,
+                    phone,
+                    location,
+                    birthday,
+                    joined: "Nov 16, 2026",
+                    bio,
+                    isNew,
+                    kudos: 1,
+                    waved: false,
+                    optIn,
+                    wishes: []
+                };
+                members.unshift(newMember);
+                if (isNew && mailRules.welcomeDigest) {
+                    emailLogs.unshift({
+                        id: Date.now() + 1,
+                        time: "Just now",
+                        celebrant: `Welcome Digest: ${name}`,
+                        recipients: `FNF Family (All ${members.length} Members)`,
+                        status: "Delivered"
+                    });
+                }
+                showToast(`Welcome to Fearless and Flawless, ${name}! Your profile is live in the directory.`, "success");
+            }
+
+            saveState();
+            renderAll();
+            switchTab('dashboard');
+        }
+
+        // ==========================================
+        // ADMIN GOVERNANCE ACTIONS (CEO / ADMIN ONLY)
+        // ==========================================
+        function assignWeeklyTaskHandler(taskId, newMemberId) {
+            if (currentRole !== 'admin') return;
+            const task = weeklyTasks.find(t => t.id === taskId);
+            if (!task) return;
+            task.memberId = Number(newMemberId);
+            saveState();
+            renderWeeklyTasks();
+            const handler = members.find(m => m.id === task.memberId);
+            showToast(`Assigned "${task.roleTitle}" to ${handler ? handler.name : 'member'}.`, "admin");
+        }
+
+        function updateWeeklyTaskStatus(taskId, newStatus) {
+            if (currentRole !== 'admin') return;
+            const task = weeklyTasks.find(t => t.id === taskId);
+            if (!task) return;
+            task.status = newStatus;
+            saveState();
+            renderWeeklyTasks();
+            showToast(`Updated "${task.roleTitle}" status to ${newStatus}.`, "admin");
+        }
+
+        function openEventModal(eventId = null) {
+            if (currentRole !== 'admin') return;
+            const modal = document.getElementById('modal-event');
+            const title = document.getElementById('modal-event-title');
+            if (eventId) {
+                const ev = events.find(e => e.id === eventId);
+                if (!ev) return;
+                title.textContent = "Admin: Edit FNF Event";
+                document.getElementById('event-id').value = ev.id;
+                document.getElementById('event-title').value = ev.title;
+                document.getElementById('event-date').value = ev.date;
+                document.getElementById('event-tag').value = ev.tag;
+                document.getElementById('event-venue').value = ev.venue;
+                document.getElementById('event-desc').value = ev.desc;
+            } else {
+                title.textContent = "Admin: Add New FNF Event";
+                document.getElementById('form-event').reset();
+                document.getElementById('event-id').value = '';
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function saveEvent(e) {
+            e.preventDefault();
+            if (currentRole !== 'admin') return;
+            const idVal = document.getElementById('event-id').value;
+            const title = document.getElementById('event-title').value.trim();
+            const date = document.getElementById('event-date').value.trim();
+            const tag = document.getElementById('event-tag').value;
+            const venue = document.getElementById('event-venue').value.trim();
+            const desc = document.getElementById('event-desc').value.trim();
+
+            if (idVal) {
+                const ev = events.find(item => item.id === Number(idVal));
+                if (ev) Object.assign(ev, { title, date, tag, venue, desc });
+                showToast(`Updated event "${title}".`, "success");
+            } else {
+                events.unshift({
+                    id: Date.now(),
+                    title,
+                    date,
+                    tag,
+                    venue,
+                    desc,
+                    rsvpCount: 1,
+                    userRsvped: true
+                });
+                showToast(`Published new FNF event "${title}"!`, "success");
+            }
+            saveState();
+            closeModal('modal-event');
+            renderEvents();
+            lucide.createIcons();
+        }
+
+        function deleteEvent(eventId) {
+            if (currentRole !== 'admin') return;
+            const ev = events.find(e => e.id === eventId);
+            if (!ev) return;
+            document.getElementById('confirm-title').textContent = `Delete "${ev.title}"?`;
+            document.getElementById('confirm-message').textContent = "This event will be removed from the FNF Family calendar.";
+            document.getElementById('confirm-proceed-btn').onclick = () => {
+                events = events.filter(e => e.id !== eventId);
+                saveState();
+                closeModal('modal-confirm');
+                renderEvents();
+                lucide.createIcons();
+                showToast(`Deleted event "${ev.title}".`, "info");
+            };
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+        }
+
+        function renderAdminDirectoryTable() {
+            const tbody = document.getElementById('admin-directory-table-body');
+            if (!tbody) return;
+
+            const query = (document.getElementById('admin-dir-search')?.value || '').toLowerCase().trim();
+            const roleFilter = document.getElementById('admin-dir-role-filter')?.value || 'ALL';
+
+            const filtered = members.filter(m => {
+                const matchesRole = roleFilter === 'ALL' || m.role === roleFilter;
+                const matchesSearch = !query ||
+                    m.name.toLowerCase().includes(query) ||
+                    m.email.toLowerCase().includes(query) ||
+                    (m.location && m.location.toLowerCase().includes(query));
+                return matchesRole && matchesSearch;
+            });
+
+            tbody.innerHTML = filtered.map(m => `
+                <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors">
+                    <td class="py-3.5 px-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 font-bold text-xs flex items-center justify-center shrink-0">
+                                ${getInitials(m.name)}
+                            </div>
+                            <div>
+                                <p class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">${m.name}</p>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">${m.email} • ${m.location || 'FNF'}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <select onchange="changeMemberRole(${m.id}, this.value)" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-100">
+                            <option value="CEO" ${m.role === 'CEO' ? 'selected' : ''}>CEO</option>
+                            <option value="Admin" ${m.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                            <option value="Member" ${m.role === 'Member' ? 'selected' : ''}>Member</option>
+                        </select>
+                    </td>
+                    <td class="py-3.5 px-4 text-xs font-medium text-slate-700 dark:text-slate-300">🎂 ${m.birthday}</td>
+                    <td class="py-3.5 px-4">
+                        <button onclick="toggleMemberSpotlight(${m.id})" class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${m.isNew ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}">
+                            ${m.isNew ? 'Spotlight On' : 'Standard'}
+                        </button>
+                    </td>
+                    <td class="py-3.5 px-6 text-right">
+                        <div class="inline-flex items-center gap-1.5">
+                            <button onclick="openMemberModal(${m.id})" class="p-1.5 rounded-lg text-slate-500 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-950/50" title="Edit Member">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDeleteMember(${m.id})" class="p-1.5 rounded-lg text-slate-500 hover:text-coral-600 hover:bg-coral-50 dark:hover:bg-coral-950/50" title="Remove Member">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function changeMemberRole(memberId, newRole) {
+            if (currentRole !== 'admin') return;
+            const m = members.find(item => item.id === memberId);
+            if (!m) return;
+            m.role = newRole;
+            saveState();
+            renderAll();
+            showToast(`Updated ${m.name}'s role to ${newRole}.`, "admin");
+        }
+
+        function toggleMemberSpotlight(memberId) {
+            if (currentRole !== 'admin') return;
+            const m = members.find(item => item.id === memberId);
+            if (!m) return;
+            m.isNew = !m.isNew;
+            saveState();
+            renderAll();
+            showToast(`${m.name} spotlight is now ${m.isNew ? 'ON' : 'OFF'}.`, "info");
+        }
+
+        function openMemberModal(memberId = null) {
+            if (currentRole !== 'admin') return;
+            const modal = document.getElementById('modal-member');
+            const title = document.getElementById('modal-member-title');
+            if (memberId) {
+                const m = members.find(item => item.id === memberId);
+                if (!m) return;
+                title.textContent = "Admin: Edit FNF Member";
+                document.getElementById('member-id').value = m.id;
+                document.getElementById('member-name').value = m.name;
+                document.getElementById('member-role').value = m.role;
+                document.getElementById('member-birthday').value = m.birthday;
+                document.getElementById('member-email').value = m.email;
+                document.getElementById('member-phone').value = m.phone || '';
+                document.getElementById('member-location').value = m.location || '';
+                document.getElementById('member-bio').value = m.bio || '';
+                document.getElementById('member-is-new').checked = Boolean(m.isNew);
+                document.getElementById('member-optin').checked = m.optIn !== false;
+            } else {
+                title.textContent = "Admin: Add New FNF Member";
+                document.getElementById('form-member').reset();
+                document.getElementById('member-id').value = '';
+                document.getElementById('member-role').value = 'Member';
+                document.getElementById('member-is-new').checked = true;
+                document.getElementById('member-optin').checked = true;
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function saveMember(e) {
+            e.preventDefault();
+            if (currentRole !== 'admin') return;
+            const idVal = document.getElementById('member-id').value;
+            const name = document.getElementById('member-name').value.trim();
+            const role = document.getElementById('member-role').value;
+            const birthday = document.getElementById('member-birthday').value.trim();
+            const email = document.getElementById('member-email').value.trim();
+            const phone = document.getElementById('member-phone').value.trim();
+            const location = document.getElementById('member-location').value.trim() || 'Lagos';
+            const bio = document.getElementById('member-bio').value.trim();
+            const isNew = document.getElementById('member-is-new').checked;
+            const optIn = document.getElementById('member-optin').checked;
+
+            if (idVal) {
+                const m = members.find(item => item.id === Number(idVal));
+                if (m) Object.assign(m, { name, role, birthday, email, phone, location, bio, isNew, optIn });
+                showToast(`Updated ${name}'s directory record.`, "success");
+            } else {
+                members.unshift({
+                    id: Date.now(),
+                    name,
+                    role,
+                    email,
+                    phone,
+                    location,
+                    birthday,
+                    joined: "Nov 16, 2026",
+                    bio,
+                    isNew,
+                    kudos: 1,
+                    waved: false,
+                    optIn,
+                    wishes: []
+                });
+                showToast(`Added ${name} to Fearless and Flawless!`, "success");
+            }
+            saveState();
+            closeModal('modal-member');
+            renderAll();
+        }
+
+        function confirmDeleteMember(memberId) {
+            if (currentRole !== 'admin') return;
+            const m = members.find(item => item.id === memberId);
+            if (!m) return;
+            document.getElementById('confirm-title').textContent = `Remove ${m.name}?`;
+            document.getElementById('confirm-message').textContent = "This member will be removed from the FNF Family Directory and birthday radar.";
+            document.getElementById('confirm-proceed-btn').onclick = () => {
+                members = members.filter(item => item.id !== memberId);
+                saveState();
+                closeModal('modal-confirm');
+                renderAll();
+                showToast(`Removed ${m.name} from directory.`, "info");
+            };
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+        }
+
+        // ==========================================
+        // BIRTHDAY WISHES & EMAIL ENGINE
+        // ==========================================
+        function openWishModal(recipientName) {
+            currentWishTarget = recipientName;
+            document.getElementById('wish-recipient-name').textContent = recipientName;
+            document.getElementById('wish-message-input').value = '';
+            const modal = document.getElementById('modal-wish');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function setQuickWish(text) {
+            document.getElementById('wish-message-input').value = text;
+        }
+
+        function submitBirthdayWish(e) {
+            e.preventDefault();
+            const text = document.getElementById('wish-message-input').value.trim();
+            if (!text || !currentWishTarget) return;
+
+            const member = members.find(m => m.name === currentWishTarget);
+            const sender = currentRole === 'admin' ? 'Seyi Adeyemi (CEO)' : 'Amara Okafor';
+            if (member) {
+                if (!member.wishes) member.wishes = [];
+                member.wishes.unshift({ from: sender, text });
+                saveState();
+                renderBirthdays();
+            }
+
+            closeModal('modal-wish');
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
+            }
+            showToast(`Posted birthday wish for ${currentWishTarget}! 🎉`, "success");
+        }
+
+        function toggleMailRule(ruleName, enabled) {
+            if (ruleName.includes('3-Day')) mailRules.threeDay = enabled;
+            if (ruleName.includes('Morning')) mailRules.dayOf = enabled;
+            if (ruleName.includes('Welcome')) mailRules.welcomeDigest = enabled;
+            saveState();
+            showToast(`${ruleName} ${enabled ? 'enabled' : 'paused'}.`, "admin");
+        }
+
+        function openEmailPreviewModal() {
+            const box = document.getElementById('email-preview-celebrants-box');
+            const upcoming = members
+                .map(m => ({ ...m, bdayMeta: getBirthdayStats(m.birthday) }))
+                .sort((a, b) => a.bdayMeta.countdownDays - b.bdayMeta.countdownDays)
+                .slice(0, 3);
+
+            if (box) {
+                box.innerHTML = `
+                    <p class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-2">Upcoming FNF Celebrants:</p>
+                    <ul class="space-y-1.5 text-xs text-slate-700">
+                        ${upcoming.map(u => `<li>🎂 <strong>${u.name}</strong> (${u.role}) — <strong>${u.birthday}</strong> (${u.bdayMeta.label})</li>`).join('')}
+                    </ul>
+                `;
+            }
+            const modal = document.getElementById('modal-email-preview');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function triggerManualReminderEmail() {
+            const optInCount = members.filter(m => m.optIn !== false).length;
+            const nextCelebrant = members
+                .map(m => ({ ...m, bdayMeta: getBirthdayStats(m.birthday) }))
+                .sort((a, b) => a.bdayMeta.countdownDays - b.bdayMeta.countdownDays)[0];
+
+            emailLogs.unshift({
+                id: Date.now(),
+                time: "Just now",
+                celebrant: nextCelebrant ? `${nextCelebrant.name} (${nextCelebrant.birthday} Reminder)` : "FNF Monthly Birthday Digest",
+                recipients: `CEO, Admins & ${optInCount} Opt-In Members`,
+                status: "Delivered"
+            });
+            saveState();
+            renderEmailLogs();
+            showToast(`Dispatched birthday reminder email to ${optInCount} FNF Family recipients!`, "success");
+        }
+
+        function renderEmailLogs() {
+            const tbody = document.getElementById('email-logs-container');
+            if (!tbody) return;
+            tbody.innerHTML = emailLogs.map(log => `
+                <tr class="row-highlight">
+                    <td class="py-3 pr-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">${log.time}</td>
+                    <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-100">${log.celebrant}</td>
+                    <td class="py-3 px-3 text-slate-600 dark:text-slate-300">${log.recipients}</td>
+                    <td class="py-3 pl-3 text-right">
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">
+                            ✓ ${log.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==========================================
+        // MASTER RENDER & BOOTSTRAP
+        // ==========================================
+        function renderAll() {
+            const totalMembers = members.length;
+            const statTotal = document.getElementById('stat-total-members');
+            const navCount = document.getElementById('nav-member-count');
+            if (statTotal) statTotal.textContent = totalMembers;
+            if (navCount) navCount.textContent = totalMembers;
+
+            const r3 = document.getElementById('rule-3day');
+            const rDay = document.getElementById('rule-dayof');
+            const rWel = document.getElementById('rule-welcome');
+            if (r3) r3.checked = mailRules.threeDay !== false;
+            if (rDay) rDay.checked = mailRules.dayOf !== false;
+            if (rWel) rWel.checked = mailRules.welcomeDigest !== false;
+
+            renderCharter();
+            renderNewMembers();
+            renderBirthdays();
+            renderEvents();
+            renderWeeklyTasks();
+            renderLeadership();
+            renderDashboardMemberDirectory();
+            renderMemberDirectoryCards();
+            renderAdminDirectoryTable();
+            renderEmailLogs();
+            populateMyProfilePicker();
+            lucide.createIcons();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadState();
+            populateDaySelector();
+            detectInitialRoleFromURL();
+            renderAll();
+        });
+    </script>
+</body>
+</html>
